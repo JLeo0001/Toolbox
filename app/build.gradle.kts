@@ -24,12 +24,18 @@ android {
             // Try key.properties first (local builds)
             val keyPropsFile = rootProject.file("key.properties")
             if (keyPropsFile.exists()) {
-                val props = java.util.Properties()
-                keyPropsFile.inputStream().use { props.load(it) }
-                storeFile = rootProject.file(props["storeFile"] as String)
-                storePassword = props["storePassword"] as String
-                keyAlias = props["keyAlias"] as String
-                keyPassword = props["keyPassword"] as String
+                val lines = keyPropsFile.readLines()
+                val props = mutableMapOf<String, String>()
+                for (line in lines) {
+                    val idx = line.indexOf("=")
+                    if (idx > 0 && !line.startsWith("#")) {
+                        props[line.substring(0, idx).trim()] = line.substring(idx + 1).trim()
+                    }
+                }
+                storeFile = rootProject.file(props["storeFile"] ?: "")
+                storePassword = props["storePassword"] ?: ""
+                keyAlias = props["keyAlias"] ?: ""
+                keyPassword = props["keyPassword"] ?: ""
             } else {
                 // Fallback: environment variables / project properties (CI)
                 val keystorePath = System.getenv("KEYSTORE_PATH") ?: project.findProperty("KEYSTORE_PATH") as? String
