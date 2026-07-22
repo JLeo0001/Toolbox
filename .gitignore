@@ -3,6 +3,7 @@
 /local.properties
 keystore.jks
 *.keystore
+key.properties
 /.idea/caches
 /.idea/libraries
 /.idea/modules.xml
