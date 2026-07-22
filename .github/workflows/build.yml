@@ -42,12 +42,10 @@ jobs:
         run: |
           if [ -n "$KEYSTORE_BASE64" ]; then
             echo "$KEYSTORE_BASE64" | base64 -d > publish.keystore
-            cat > key.properties << EOF
-            storePassword=$STORE_PASSWORD
-            keyPassword=$KEY_PASSWORD
-            keyAlias=$KEY_ALIAS
-            storeFile=./publish.keystore
-            EOF
+            echo "storePassword=$STORE_PASSWORD" > key.properties
+            echo "keyPassword=$KEY_PASSWORD" >> key.properties
+            echo "keyAlias=$KEY_ALIAS" >> key.properties
+            echo "storeFile=./publish.keystore" >> key.properties
             echo "keystore_decoded=true" >> "$GITHUB_OUTPUT"
             echo "Keystore decoded and key.properties created"
           else
